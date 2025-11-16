@@ -9,7 +9,7 @@ return {
       keyword = {range = 'prefix'},
       list = {selection = {preselect = false, auto_insert = true}},
       menu = {draw = {
-        columns = {{'kind', 'label'}}
+        columns = {{'kind', 'label', gap = 2}}
       }},
     },
     fuzzy = {implementation = 'prefer_rust'},
