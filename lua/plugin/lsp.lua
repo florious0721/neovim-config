@@ -1,11 +1,14 @@
 return {
   'neovim/nvim-lspconfig',
+  dependencies = {'saghen/blink.cmp'},
   ft = {
     'c', 'cpp',
     'python', 'zig'
   },
   config = function()
-    --local cap = require('cmp_nvim_lsp').default_capabilities()
+    local capa = require('blink.cmp').get_lsp_capabilities()
+    local lspcfg = require('lspconfig')
+
     vim.api.nvim_create_autocmd('LspAttach', {
       group = vim.api.nvim_create_augroup('UserLspConfig', {}),
       callback = function(ev)
@@ -22,8 +25,9 @@ return {
         end, opts)
       end
     })
-    require('lspconfig').clangd.setup({
-      --capabilities = cap,
+
+    lspcfg.clangd.setup({
+      capabilities = capa,
       cmd = {
         'clangd',
         '--clang-tidy',
@@ -39,8 +43,9 @@ return {
       },
       single_file_support = true,
     })
-    require('lspconfig').pylsp.setup({})
+    require('lspconfig').pylsp.setup({capabilities = capa})
     require('lspconfig').zls.setup({
+      capabilities = capa,
       settings = {
         enable_argument_placeholders = true,
         enable_build_on_save = true,
