@@ -4,7 +4,13 @@ return {
   config = function()
     local conform = require('conform')
     conform.setup({
-    formatters = {uncrustify = {command = 'uncrustify'}},
+    formatters = {uncrustify = {
+      inherit = true,
+      command = 'uncrustify',
+      prepend_args = {
+        '-c', vim.fn.stdpath('config')..'/toolcfg/uncrustify.cfg',
+      },
+    }},
     formatters_by_ft = {c = {'uncrustify'}, cpp = {'uncrustify'}},
   })
     vim.keymap.set({'n', 'v'}, '<leader>f', function()
