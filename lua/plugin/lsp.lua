@@ -7,7 +7,7 @@ return {
   },
   config = function()
     local capa = require('blink.cmp').get_lsp_capabilities()
-    local lspcfg = require('lspconfig')
+    local lsp = vim.lsp
 
     vim.api.nvim_create_autocmd('LspAttach', {
       group = vim.api.nvim_create_augroup('UserLspConfig', {}),
@@ -26,7 +26,12 @@ return {
       end
     })
 
-    lspcfg.clangd.setup({
+    lsp.enable('clangd')
+    lsp.enable('csharp_ls')
+    lsp.enable('pylsp')
+    lsp.enable('zls')
+
+    lsp.config('clangd',{
       capabilities = capa,
       cmd = {
         'clangd',
@@ -43,8 +48,8 @@ return {
       },
       single_file_support = true,
     })
-    require('lspconfig').pylsp.setup({capabilities = capa})
-    require('lspconfig').zls.setup({
+    lsp.config('pylsp', {capabilities = capa})
+    lsp.config('zls', {
       capabilities = capa,
       settings = {
         enable_argument_placeholders = true,
