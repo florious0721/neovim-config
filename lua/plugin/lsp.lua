@@ -2,7 +2,7 @@ return {
   'neovim/nvim-lspconfig',
   dependencies = {'saghen/blink.cmp'},
   ft = {
-    'c', 'cpp',
+    'c', 'cpp', 'cs', 'go', 'gomod', 'gosum',
     'python', 'zig'
   },
   config = function()
@@ -27,8 +27,9 @@ return {
     })
 
     lsp.enable('clangd')
-    lsp.enable('csharp_ls')
+    lsp.enable('gopls')
     lsp.enable('pylsp')
+    lsp.enable('roslyn_ls')
     lsp.enable('zls')
 
     lsp.config('clangd',{
@@ -38,9 +39,7 @@ return {
         '--clang-tidy',
         '--completion-style=detailed',
         '--enable-config',
-        '--function-arg-placeholders=0',
-        '--header-insertion=never',
-        '--header-insertion-decorators',
+        --'--header-insertion-decorators',
       },
       filetypes = {
         'c', 'cpp', 'objc',
@@ -48,7 +47,18 @@ return {
       },
       single_file_support = true,
     })
+
+    lsp.config('gopls', {capabilities = capa})
+
     lsp.config('pylsp', {capabilities = capa})
+    --[[lsp.config('roslyn_ls', {
+      cmd = {
+        "Microsoft.CodeAnalysis.LanguageServer",
+        "--logLevel", "Information",
+        "--extensionLogDirectory", "/tmp/roslyn_ls/logs",
+        --"--stdio"
+      },
+    })]]
     lsp.config('zls', {
       capabilities = capa,
       settings = {
@@ -58,5 +68,6 @@ return {
         warn_style = true,
       },
     })
+
   end,
 }
