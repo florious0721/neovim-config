@@ -2,8 +2,10 @@ return {
   'neovim/nvim-lspconfig',
   dependencies = {'saghen/blink.cmp'},
   ft = {
-    'c', 'cpp', 'cs', 'go', 'gomod', 'gosum',
-    'python', 'zig'
+    'c', 'cpp', 'cs',
+    'go', 'gomod', 'gosum',
+    'javascript', 'typescript', 'vue',
+    'python', 'zig',
   },
   config = function()
     local capa = require('blink.cmp').get_lsp_capabilities()
@@ -28,8 +30,10 @@ return {
 
     lsp.enable('clangd')
     lsp.enable('gopls')
-    lsp.enable('pylsp')
+    lsp.enable('pyright')
+    --lsp.enable('pylsp')
     lsp.enable('roslyn_ls')
+    lsp.enable({'ts_ls', 'vue_ls'})
     lsp.enable('zls')
 
     lsp.config('clangd',{
@@ -49,8 +53,25 @@ return {
     })
 
     lsp.config('gopls', {capabilities = capa})
+    lsp.config('pyright', {capabilities = capa})
 
-    lsp.config('pylsp', {capabilities = capa})
+    local tsserver_ft = {'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'vue'}
+    local vue_plugin = {
+      name = '@vue/typescript-plugin',
+      location = '/dat/var/pnpm/global/5/node_modules/@vue/language-server',
+      languages = {'vue'},
+      configNamespace = 'typescript',
+    }
+    lsp.config('vue_ls', {
+      capabilities = capa,
+      filetypes = tsserver_ft,
+    })
+    lsp.config('ts_ls', {
+      capabilities = capa,
+      init_options = {plugins = {vue_plugin}},
+      filetypes = tsserver_ft,
+    })
+
     --[[lsp.config('roslyn_ls', {
       cmd = {
         "Microsoft.CodeAnalysis.LanguageServer",
